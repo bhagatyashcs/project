@@ -91,10 +91,21 @@ app.post('/login', async (req, res) => {
 // ==========================================
 // FRONTEND ROUTES
 // ==========================================
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'landing.html')));
-app.get('/expense', (req, res) => res.sendFile(path.join(__dirname, 'public', 'expense.html')));
-app.get('/invest', (req, res) => res.sendFile(path.join(__dirname, 'public', 'invest.html')));
+// Replace the old app.get sections with this:
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/landing.html'));
+});
 
+app.get('/expense', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/expense.html'));
+});
+
+app.get('/invest', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/invest.html'));
+});
+
+// Add this to make sure it handles the paths correctly
+app.use(express.static(path.join(__dirname, 'public')));
 // ==========================================
 // INVESTMENT (TRADE) ROUTES
 // ==========================================
