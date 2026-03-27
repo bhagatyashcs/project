@@ -279,28 +279,26 @@
         $scope.loggedInUser = '';
       };
 
-      $scope.submitAuth = function() {
-        if(!$scope.username || !$scope.password) { $scope.authError = "Please fill all fields."; return; }
-        
-        let endpoint = $scope.isLogin ? "/login" : "/signup";
-        $http.post(endpoint, { username: $scope.username, password: $scope.password })
-          .then(function(res) {
-            if(!$scope.isLogin) {
-              $scope.isLogin = true;
-              $scope.authError = "Account created! Please log in.";
-              $scope.password = "";
-            } else {
-              $window.localStorage.setItem('token', res.data.token);
-              $window.localStorage.setItem('username', res.data.username);
-              $scope.isLoggedIn = true;
-              $scope.loggedInUser = res.data.username;
-              $scope.showAuth = false;
-            }
-          })
-          .catch(function(err) {
-            $scope.authError = err.data.error || "Authentication failed.";
-          });
-      };
+     // Inside your submitAuth function:
+$scope.submitAuth = () => {
+    let path = $scope.isLogin ? "/login" : "/signup"; // NOTICE: No localhost here!
+    $http.post(path, { 
+        username: $scope.username, 
+        password: $scope.password, 
+        securityAnswer: $scope.securityAnswer 
+    }).then(res => {
+        if(!$scope.isLogin) { 
+            $scope.isLogin = true; 
+            $scope.authSuccess = "Created! Now Login."; 
+        } else { 
+            $window.localStorage.setItem('token', res.data.token); 
+            $window.localStorage.setItem('username', res.data.username); 
+            $window.location.reload(); 
+        }
+    }).catch(err => {
+        $scope.authError = err.data.error || "Connection Failed";
+    });
+};
 
       $scope.liveBTC = null;
       $scope.liveINR = null;
